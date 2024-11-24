@@ -10,8 +10,8 @@ A 2D artillery adventure game built using Python's pygame library.
 ### Setup Instructions
 - Clone this repository:
 ```bash
-git clone https://github.com/Fidelisaboke/Cannon-Frenzy.git
-cd pygame-tutorials
+git clone https://github.com/Twna-Jane/Cannon-Frenzy.git
+cd Cannon-Frenzy
 ```
 
 - Set up virtual environment:
