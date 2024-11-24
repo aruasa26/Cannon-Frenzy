@@ -5,7 +5,7 @@ import math
 from constants import *
 
 class Cannon(pygame.sprite.Sprite):
-    def __init__(self, screen, cannonballs, cannonballs_left, power=20):
+    def __init__(self, screen, cannonballs, cannonballs_left, power=25):
         super().__init__()
         self.screen = screen
         self.cannonballs = cannonballs

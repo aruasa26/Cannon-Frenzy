@@ -35,10 +35,15 @@ class CannonFrenzy:
         self.score = 0
         self.game_over = False
         self.cannonballs = []
-        self.cannon = sprites.Cannon(self.screen, self.cannonballs, self.current_level.cannonballs_left)
+        self.cannon = sprites.Cannon(
+            self.screen,
+            self.cannonballs,
+            self.current_level.cannonballs_left
+        )
 
     def reset_game(self):
         """ Resets the game state. """
+        self.levels = [Level(self.screen, **config) for config in LEVELS_CONFIG]
         self.current_level_index = 0
         self.current_level = self.levels[self.current_level_index]
         self.score = 0

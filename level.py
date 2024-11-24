@@ -7,12 +7,11 @@ from sprites import Target
 
 
 class Level:
-    def __init__(self, screen, level_number, num_targets, target_size, cannonball_power, cannonballs_left):
+    def __init__(self, screen, level_number, num_targets, target_size, cannonballs_left):
         self.screen = screen
         self.level_number = level_number
         self.num_targets = num_targets
         self.target_size = target_size
-        self.cannonball_power = cannonball_power
         self.cannonballs_left = cannonballs_left
         self.targets = self.generate_targets()
 
@@ -30,4 +29,5 @@ class Level:
             target.draw()
 
     def update(self):
-        pass  # Add any level-specific updates here
+        # TODO: Add level-specific updates
+        pass
