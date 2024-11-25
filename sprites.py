@@ -12,15 +12,22 @@ class Cannon(pygame.sprite.Sprite):
         self.cannonballs_left = cannonballs_left
         self.power = power
         self.x = 100
-        self.y = SCREEN_HEIGHT - 50
+        self.y = SCREEN_HEIGHT - 60
         self.angle = 45
 
+        # Cannon fire sound
+        self.cannon_fire_sound = pygame.mixer.Sound("assets/audio/sfx/cannon_fire.ogg")
+        self.cannon_fire_sound.set_volume(0.5)
+
     def draw(self):
-        pygame.draw.rect(self.screen, "Black", (self.x - 10, self.y - 30, 20, 30))  # Cannon base
+        # Cannon base
+        pygame.draw.rect(self.screen, "Black", (self.x - 10, self.y - 30, 20, 30))
+
+        # Cannon barrel
         cannon_length = 50
         end_x = self.x + cannon_length * math.cos(math.radians(self.angle))
         end_y = self.y - cannon_length * math.sin(math.radians(self.angle))
-        pygame.draw.line(self.screen, "Red", (self.x, self.y), (end_x, end_y), 5)  # Cannon barrel
+        pygame.draw.line(self.screen, "Red", (self.x, self.y), (end_x, end_y), 5)
 
     def adjust_angle(self, change):
         """ Adjusts the cannon barrel's angle.
@@ -35,6 +42,7 @@ class Cannon(pygame.sprite.Sprite):
         if keys[pygame.K_DOWN]:
             self.adjust_angle(1)
         if keys[pygame.K_SPACE] and len(self.cannonballs) == 0 and self.cannonballs_left > 0:
+            self.cannon_fire_sound.play()
             self.cannonballs.append(Cannonball(self.screen, self.x, self.y, self.angle, self.power))
             self.cannonballs_left -= 1
 

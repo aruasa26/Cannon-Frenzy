@@ -25,11 +25,13 @@ class CannonFrenzy:
         self.fps = 60
         self.font = pygame.font.Font(None, 36)
 
-
         # Levels configuration
         self.levels = [Level(self.screen, **config) for config in LEVELS_CONFIG]
         self.current_level_index = 0
         self.current_level = self.levels[self.current_level_index]
+
+        # Background Image
+        self.bg_image = pygame.image.load("assets/images/bg_001.png")
 
         # Initial properties -> Level 1
         self.score = 0
@@ -41,8 +43,23 @@ class CannonFrenzy:
             self.current_level.cannonballs_left
         )
 
+        # Sounds
+        self.game_start_sound = pygame.mixer.Sound("assets/audio/sfx/game_start.wav")
+        self.game_start_sound.set_volume(0.5)
+
+        self.game_over_sound = pygame.mixer.Sound("assets/audio/sfx/game_over.wav")
+        self.game_over_sound.set_volume(0.5)
+        self.game_over_sound_played = False
+
+        self.target_hit_sound = pygame.mixer.Sound("assets/audio/sfx/target_hit.ogg")
+        self.target_hit_sound.set_volume(0.5)
+
+
     def reset_game(self):
         """ Resets the game state. """
+        self.game_over_sound_played = False
+        self.game_start_sound.play()
+
         self.levels = [Level(self.screen, **config) for config in LEVELS_CONFIG]
         self.current_level_index = 0
         self.current_level = self.levels[self.current_level_index]
@@ -53,6 +70,9 @@ class CannonFrenzy:
 
     def run(self):
         """ Runs the game loop. """
+
+        # Game start sound
+        self.game_start_sound.play()
 
         while True:
             # Event handling
@@ -73,9 +93,15 @@ class CannonFrenzy:
                 self.game_over = True
 
             if self.game_over:
-                self.display_game_over()
+                self.handle_game_over()
             else:
-                self.screen.fill("White")
+                # Determining background image according to level number
+                if self.current_level.level_number % 2 == 0:
+                    self.bg_image = pygame.image.load("assets/images/bg_003.png")
+                else:
+                    self.bg_image = pygame.image.load("assets/images/bg_001.png")
+
+                self.screen.blit(self.bg_image, (0, 0))
                 self.cannon.draw()
                 self.current_level.draw()
 
@@ -89,6 +115,7 @@ class CannonFrenzy:
 
                     for target in self.current_level.targets[:]:
                         if target.hit(cannonball):
+                            self.target_hit_sound.play()
                             self.current_level.targets.remove(target)
                             self.cannonballs.remove(cannonball)
                             self.score += 10
@@ -130,11 +157,16 @@ class CannonFrenzy:
             self.clock.tick(self.fps)
 
 
-    def display_game_over(self):
+    def handle_game_over(self):
         """ Displays the game over screen. """
         pygame.display.update()
         self.clock.tick(self.fps)
         pygame.time.delay(1000)
+
+        # Game over sound
+        if not self.game_over_sound_played:
+            self.game_over_sound_played = True
+            self.game_over_sound.play()
 
         # Game over screen
         self.screen.fill("White")
