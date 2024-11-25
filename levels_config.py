@@ -19,7 +19,7 @@ LEVELS_CONFIG = [
         "level_number": 3,
         "num_targets": 10,
         "target_size": 40,
-        "cannonballs_left": 9
+        "cannonballs_left": 10
     }
 ]
 

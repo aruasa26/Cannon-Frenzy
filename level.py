@@ -18,10 +18,20 @@ class Level:
     def generate_targets(self):
         targets = []
         for _ in range(self.num_targets):
-            x = random.randint(400, SCREEN_WIDTH - 50)
-            y = random.randint(200, 400)
-            target = Target(self.screen, x, y, self.target_size, self.target_size)
-            targets.append(target)
+            overlap = True
+            while overlap:
+                overlap = False
+                x = random.randint(400, SCREEN_WIDTH - 50)
+                y = random.randint(200, 400)
+                new_target = Target(self.screen, x, y, self.target_size, self.target_size)
+                for target in targets:
+                    if target.rect.colliderect(new_target.rect):
+                        overlap = True
+                        break
+                if not overlap:
+                    targets.append(new_target)
+                    break
+
         return targets
 
     def draw(self):

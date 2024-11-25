@@ -169,10 +169,11 @@ class CannonFrenzy:
             self.game_over_sound.play()
 
         # Game over screen
-        self.screen.fill("White")
-        self.font = pygame.font.Font(None, 36)
+        sunset_image = pygame.image.load("assets/images/sunset_pixel.jpg")
+        self.screen.blit(sunset_image, (0, 0))
+        self.font = pygame.font.Font(None, 50)
         game_over_text = self.font.render("GAME OVER!", True, "Black")
-        game_over_rect = game_over_text.get_rect(center=(400, 260))
+        game_over_rect = game_over_text.get_rect(center=(400, 200))
         self.screen.blit(game_over_text, game_over_rect)
 
         score_text = self.font.render(f"Score: {self.score}", True, "Black")
@@ -180,6 +181,6 @@ class CannonFrenzy:
         self.screen.blit(score_text, score_text_rect)
 
         restart_text = self.font.render("Press R to restart game", True, "Black")
-        restart_text_rect = restart_text.get_rect(center=(400, 340))
+        restart_text_rect = restart_text.get_rect(center=(400, 360))
         self.screen.blit(restart_text, restart_text_rect)
 

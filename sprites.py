@@ -83,9 +83,10 @@ class Target(pygame.sprite.Sprite):
         self.width = width
         self.height = height
         self.color = color
+        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
 
     def draw(self):
-        pygame.draw.rect(self.screen, self.color, (self.x, self.y, self.width, self.height))
+        pygame.draw.rect(self.screen, self.color, self.rect)
 
     def hit(self, cannonball):
         """ Checks if the target has been hit by a cannonball.
