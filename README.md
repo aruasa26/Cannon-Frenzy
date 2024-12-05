@@ -48,6 +48,9 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
+### Basic Usage
+Run the `main.py` file to play the game.
+
 ## How to Play
 
 1. **Objective**:
