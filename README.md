@@ -1,11 +1,25 @@
-# Cannon Frenzy: 2D Artillery Adventure 
-A 2D artillery adventure game built using Python's pygame library.
+# Cannon Frenzy
 
-## Project Installation
-### Installation Requirements
-1. [Python 3](https://www.python.org/downloads/)
-2. [Git](https://git-scm.com/downloads)
-3. An IDE or Code editor that supports Python.
+**Cannon Frenzy** is an engaging and fast-paced game where players control a cannon to achieve specific objectives. This repository contains the source code and all the assets necessary to run and play Cannon Frenzy.
+
+---
+
+## Table of Contents
+
+1. [Features](#features)
+2. [Setup Instructions](#setup-instructions)
+3. [How to Play](#how-to-play)
+4. [License](#license)
+
+---
+
+## Features
+
+- **Interactive Gameplay**: Control a cannon to shoot targets with precision.
+- **Dynamic Levels**: Increasing difficulty as you progress.
+- **Exciting Visuals**: Eye-catching graphics and animations.
+- **Customizable Settings**: Adjust game parameters like difficulty and control schemes.
+
 
 ### Setup Instructions
 - Clone this repository:
@@ -33,4 +47,27 @@ python -m venv .venv
 ```bash
 pip install -r requirements.txt
 ```
+
+## How to Play
+
+1. **Objective**:
+   Aim and shoot your cannon to hit targets and score points.
+
+2. **Controls**:
+   - Use the arrow keys to adjust the cannon's angle.
+   - Press the spacebar to fire.
+
+3. **Scoring**:
+   - Each successful hit earns points.
+   - Hitting multiple targets in a row grants combo bonuses.
+
+4. **Game Over**:
+   The game ends when you run out of cannonballs or time.
+
+---
+
+## License
+
+This project is licensed under the [MIT License](LICENSE). You are free to use, modify, and distribute this software, provided that the original license is included.
+
   
