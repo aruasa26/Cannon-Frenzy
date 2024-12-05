@@ -23,7 +23,8 @@ class CannonFrenzy:
         pygame.display.set_caption("Cannon Frenzy")
         self.clock = pygame.time.Clock()
         self.fps = 60
-        self.font = pygame.font.Font(None, 36)
+        self.font = pygame.font.Font(None, 72)
+        self.small_font = pygame.font.Font(None, 36)
 
         # Levels configuration
         self.levels = [Level(self.screen, **config) for config in LEVELS_CONFIG]
@@ -32,6 +33,7 @@ class CannonFrenzy:
 
         # Background Image
         self.bg_image = pygame.image.load("assets/images/bg_001.png")
+        self.menu_bg_image = pygame.image.load("assets/images/bg_004.jpg")
 
         # Initial properties -> Level 1
         self.score = 0
@@ -54,9 +56,40 @@ class CannonFrenzy:
         self.target_hit_sound = pygame.mixer.Sound("assets/audio/sfx/target_hit.ogg")
         self.target_hit_sound.set_volume(0.5)
 
+        # Game started flag
+        self.game_started = False
+
+    def start_menu(self):
+        """Displays the start menu."""
+        while not self.game_started:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_s:
+                        self.game_started = True
+                        self.game_start_sound.play()
+
+            # Draw menu background
+            self.screen.blit(self.menu_bg_image, (0, 0))
+
+            # Display game title
+            title_text = self.font.render("Cannon Frenzy", True, "Black")
+            title_rect = title_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 3))
+            self.screen.blit(title_text, title_rect)
+
+            # Display start instructions
+            start_text = self.small_font.render("Press S to Start", True, "Black")
+            start_rect = start_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+            self.screen.blit(start_text, start_rect)
+
+            pygame.display.update()
+            self.clock.tick(self.fps)
 
     def reset_game(self):
-        """ Resets the game state. """
+        """Resets the game state."""
         self.game_over_sound_played = False
         self.game_start_sound.play()
 
@@ -69,7 +102,9 @@ class CannonFrenzy:
         self.cannon = sprites.Cannon(self.screen, self.cannonballs, self.current_level.cannonballs_left)
 
     def run(self):
-        """ Runs the game loop. """
+        """Runs the game loop."""
+        # Start menu
+        self.start_menu()
 
         # Game start sound
         self.game_start_sound.play()
@@ -77,7 +112,6 @@ class CannonFrenzy:
         while True:
             # Event handling
             for event in pygame.event.get():
-
                 # On exiting the game
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -95,7 +129,7 @@ class CannonFrenzy:
             if self.game_over:
                 self.handle_game_over()
             else:
-                # Determining background image according to level number
+                # Determine background image according to level number
                 if self.current_level.level_number % 2 == 0:
                     self.bg_image = pygame.image.load("assets/images/bg_003.png")
                 else:
@@ -104,7 +138,6 @@ class CannonFrenzy:
                 self.screen.blit(self.bg_image, (0, 0))
                 self.cannon.draw()
                 self.current_level.draw()
-
 
                 for cannonball in self.cannonballs[:]:
                     cannonball.move()
@@ -121,7 +154,6 @@ class CannonFrenzy:
                             self.score += 10
                             break
 
-
                 # Check if all targets are hit
                 if not self.current_level.targets:
                     self.current_level_index += 1
@@ -130,8 +162,7 @@ class CannonFrenzy:
                         cannonballs_left = self.current_level.cannonballs_left
                         self.cannon = sprites.Cannon(self.screen, self.cannonballs, cannonballs_left)
 
-
-                # Display level, score and cannonballs left
+                # Display level, score, and cannonballs left
                 self.font = pygame.font.Font(None, 36)
 
                 level_text = self.font.render(f"Level: {self.current_level.level_number}", True, "Black")
@@ -156,9 +187,8 @@ class CannonFrenzy:
             pygame.display.update()
             self.clock.tick(self.fps)
 
-
     def handle_game_over(self):
-        """ Displays the game over screen. """
+        """Displays the game over screen."""
         pygame.display.update()
         self.clock.tick(self.fps)
         pygame.time.delay(1000)
@@ -183,4 +213,3 @@ class CannonFrenzy:
         restart_text = self.font.render("Press R to restart game", True, "Black")
         restart_text_rect = restart_text.get_rect(center=(400, 360))
         self.screen.blit(restart_text, restart_text_rect)
-
