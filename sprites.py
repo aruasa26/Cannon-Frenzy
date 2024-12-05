@@ -38,9 +38,9 @@ class Cannon(pygame.sprite.Sprite):
     def move(self):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_UP]:
-            self.adjust_angle(-1)
-        if keys[pygame.K_DOWN]:
             self.adjust_angle(1)
+        if keys[pygame.K_DOWN]:
+            self.adjust_angle(-1)
         if keys[pygame.K_SPACE] and len(self.cannonballs) == 0 and self.cannonballs_left > 0:
             self.cannon_fire_sound.play()
             self.cannonballs.append(Cannonball(self.screen, self.x, self.y, self.angle, self.power))
@@ -83,10 +83,17 @@ class Target(pygame.sprite.Sprite):
         self.width = width
         self.height = height
         self.color = color
-        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
+        try:
+            self.image = pygame.image.load("assets/images/sprites/target.png").convert_alpha()
+            self.image = pygame.transform.scale(self.image, (width, height))
+        except pygame.error as e:
+            print(f"Unable to load target image: {e}")
+            self.image = pygame.Surface((width, height))
+            self.image.fill(pygame.Color(color))
+        self.rect = self.image.get_rect(topleft=(self.x, self.y))
 
     def draw(self):
-        pygame.draw.rect(self.screen, self.color, self.rect)
+        self.screen.blit(self.image, self.rect)
 
     def hit(self, cannonball):
         """ Checks if the target has been hit by a cannonball.
