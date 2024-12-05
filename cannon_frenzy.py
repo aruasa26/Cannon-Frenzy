@@ -56,6 +56,10 @@ class CannonFrenzy:
             self.current_level.cannonballs_left
         )
 
+        # Combo tracker
+        self.combo_count = 0
+        self.max_combo_streak = 0
+
 
     def reset_game(self):
         """Resets the game state."""
@@ -67,6 +71,8 @@ class CannonFrenzy:
         self.game_over = False
         self.cannonballs = []
         self.cannon = sprites.Cannon(self.screen, self.cannonballs, self.current_level.cannonballs_left)
+        self.combo_count = 0
+        self.max_combo_streak = 0
 
 
     def run(self):
@@ -116,13 +122,17 @@ class CannonFrenzy:
 
                     if cannonball.is_off_screen():
                         self.cannonballs.remove(cannonball)
+                        self.combo_count = 0
 
                     for target in self.current_level.targets[:]:
                         if target.hit(cannonball):
                             self.sound_manager.target_hit_sound.play()
                             self.current_level.targets.remove(target)
                             self.cannonballs.remove(cannonball)
-                            self.score += 10
+                            self.combo_count += 1
+                            if self.combo_count > self.max_combo_streak:
+                                self.max_combo_streak = self.combo_count
+                            self.score += 10 + 5 * (self.combo_count - 1)
                             break
 
                 # Check if all targets are hit
@@ -135,9 +145,11 @@ class CannonFrenzy:
 
                 # Display the scoreboard
                 self.scoreboard.draw(
-                    level_number = self.current_level.level_number,
-                    score = self.score,
-                    cannonballs_left = self.cannon.cannonballs_left
+                    level_number=self.current_level.level_number,
+                    score=self.score,
+                    combo_count=self.combo_count,
+                    max_combo_streak=self.max_combo_streak,
+                    cannonballs_left=self.cannon.cannonballs_left
                 )
 
                 # Update the cannon sprite
