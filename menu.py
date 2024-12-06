@@ -18,6 +18,9 @@ class Menu:
         self.start_menu_bg_image = pygame.image.load("assets/images/backgrounds/clouds.jpg")
         self.start_menu_bg_image = pygame.transform.scale(self.start_menu_bg_image, (800, 600))
 
+        self.game_over_menu_bg_image = pygame.image.load("assets/images/backgrounds/night_sky.jpg")
+        self.game_over_menu_bg_image = pygame.transform.scale(self.game_over_menu_bg_image, (800, 600))
+
 
     def start_menu(self):
         """Displays the game's start menu."""
@@ -51,23 +54,22 @@ class Menu:
 
     def game_over_menu(self, score):
         """Displays the Game over screen"""
-        sunset_image = pygame.image.load("assets/images/backgrounds/sunset_pixel.jpg")
-        self.screen.blit(sunset_image, (0, 0))
+        self.screen.blit(self.game_over_menu_bg_image, (0, 0))
         font = pygame.font.Font(None, 50)
-        game_over_text = font.render("GAME OVER!", True, "Black")
-        game_over_rect = game_over_text.get_rect(center=(400, 200))
+        game_over_text = font.render("GAME OVER", True, "White")
+        game_over_rect = game_over_text.get_rect(center=(SCREEN_WIDTH // 2, 200))
         self.screen.blit(game_over_text, game_over_rect)
 
-        score_text = font.render(f"Score: {score}", True, "Black")
-        score_text_rect = score_text.get_rect(center=(400, 300))
+        score_text = font.render(f"Score: {score}", True, "White")
+        score_text_rect = score_text.get_rect(center=(SCREEN_WIDTH // 2, 260))
         self.screen.blit(score_text, score_text_rect)
 
-        restart_text = font.render("R - Restart Game", True, "Black")
-        restart_text_rect = restart_text.get_rect(center=(400, 360))
+        restart_text = font.render("R - Restart Game", True, "White")
+        restart_text_rect = restart_text.get_rect(center=(SCREEN_WIDTH // 2, 360))
         self.screen.blit(restart_text, restart_text_rect)
 
-        start_menu_text = font.render("M - Start Menu", True, "Black")
-        start_menu_text_rect = restart_text.get_rect(center=(400, 420))
+        start_menu_text = font.render("M - Start Menu", True, "White")
+        start_menu_text_rect = restart_text.get_rect(center=(SCREEN_WIDTH // 2, 420))
         self.screen.blit(start_menu_text, start_menu_text_rect)
 
         pygame.display.update()
