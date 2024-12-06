@@ -4,7 +4,11 @@
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/.venv" />
     </content>
+<<<<<<< HEAD
     <orderEntry type="jdk" jdkName="Python 3.12" jdkType="Python SDK" />
+=======
+    <orderEntry type="jdk" jdkName="Python 3.13" jdkType="Python SDK" />
+>>>>>>> 69d4fcdf6656fb5a93a67570b0f27eb8ca0d17eb
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

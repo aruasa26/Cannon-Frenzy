@@ -6,6 +6,9 @@ import sprites
 from constants import *
 from level import Level
 from levels_config import LEVELS_CONFIG
+from menu import Menu
+from scoreboard import Scoreboard
+from sound_manager import SoundManager
 
 
 class CannonFrenzy:
@@ -24,16 +27,24 @@ class CannonFrenzy:
         self.clock = pygame.time.Clock()
         self.fps = 60
         self.font = pygame.font.Font(None, 72)
-        self.small_font = pygame.font.Font(None, 36)
 
-        # Levels configuration
+        # Level configurations
         self.levels = [Level(self.screen, **config) for config in LEVELS_CONFIG]
         self.current_level_index = 0
         self.current_level = self.levels[self.current_level_index]
 
+        # Scoreboard
+        self.scoreboard = Scoreboard(self.screen)
+
+        # Sound manager
+        self.sound_manager = SoundManager()
+        self.game_over_sound_played = False
+
+        # Menu manager
+        self.menu = Menu(self.screen, self.sound_manager)
+
         # Background Image
-        self.bg_image = pygame.image.load("assets/images/bg_001.png")
-        self.menu_bg_image = pygame.image.load("assets/images/bg_004.jpg")
+        self.level_bg_image = pygame.image.load("assets/images/backgrounds/grasslands.png")
 
         # Initial properties -> Level 1
         self.score = 0
@@ -45,10 +56,11 @@ class CannonFrenzy:
             self.current_level.cannonballs_left
         )
 
-        # Sounds
-        self.game_start_sound = pygame.mixer.Sound("assets/audio/sfx/game_start.wav")
-        self.game_start_sound.set_volume(0.5)
+        # Combo tracker
+        self.combo_count = 0
+        self.max_combo_streak = 0
 
+<<<<<<< HEAD
         self.game_over_sound = pygame.mixer.Sound("assets/audio/mixkit-funny-game-over-2878.wav")
         self.game_over_sound.set_volume(0.9)
         self.game_over_sound_played = False
@@ -101,12 +113,12 @@ class CannonFrenzy:
 
             pygame.display.update()
             self.clock.tick(self.fps)
+=======
+>>>>>>> 69d4fcdf6656fb5a93a67570b0f27eb8ca0d17eb
 
     def reset_game(self):
         """Resets the game state."""
         self.game_over_sound_played = False
-        self.game_start_sound.play()
-
         self.levels = [Level(self.screen, **config) for config in LEVELS_CONFIG]
         self.current_level_index = 0
         self.current_level = self.levels[self.current_level_index]
@@ -114,30 +126,39 @@ class CannonFrenzy:
         self.game_over = False
         self.cannonballs = []
         self.cannon = sprites.Cannon(self.screen, self.cannonballs, self.current_level.cannonballs_left)
+        self.combo_count = 0
+        self.max_combo_streak = 0
+
 
     def run(self):
-        """Runs the game loop."""
+        """Runs the game."""
+
         # Start menu
-        self.start_menu()
+        self.menu.start_menu()
 
-        # Game start sound
-        self.game_start_sound.play()
-
+<<<<<<< HEAD
         # Flag for tracking background music
         background_music_playing = False
 
+=======
+        # Game loop
+>>>>>>> 69d4fcdf6656fb5a93a67570b0f27eb8ca0d17eb
         while True:
-            # Event handling
             for event in pygame.event.get():
-                # On exiting the game
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
 
-                # Press 'R' key to restart the game
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_r and self.game_over:
+                if event.type == pygame.KEYDOWN and self.game_over:
+                    # Press 'R' key to restart the game
+                    if event.key == pygame.K_r:
                         self.reset_game()
+                        self.sound_manager.game_start_sound.play()
+
+                    # Press 'M' key to go back to the start menu
+                    if event.key == pygame.K_m:
+                        self.reset_game()
+                        self.menu.start_menu()
 
             # Game over condition
             if self.cannon.cannonballs_left == 0 and len(self.cannon.cannonballs) == 0:
@@ -156,11 +177,11 @@ class CannonFrenzy:
 
                 # Determine background image according to level number
                 if self.current_level.level_number % 2 == 0:
-                    self.bg_image = pygame.image.load("assets/images/bg_003.png")
+                    self.level_bg_image = pygame.image.load("assets/images/backgrounds/desert.png")
                 else:
-                    self.bg_image = pygame.image.load("assets/images/bg_001.png")
+                    self.level_bg_image = pygame.image.load("assets/images/backgrounds/grasslands.png")
 
-                self.screen.blit(self.bg_image, (0, 0))
+                self.screen.blit(self.level_bg_image, (0, 0))
                 self.cannon.draw()
                 self.current_level.draw()
 
@@ -170,13 +191,17 @@ class CannonFrenzy:
 
                     if cannonball.is_off_screen():
                         self.cannonballs.remove(cannonball)
+                        self.combo_count = 0
 
                     for target in self.current_level.targets[:]:
                         if target.hit(cannonball):
-                            self.target_hit_sound.play()
+                            self.sound_manager.target_hit_sound.play()
                             self.current_level.targets.remove(target)
                             self.cannonballs.remove(cannonball)
-                            self.score += 10
+                            self.combo_count += 1
+                            if self.combo_count > self.max_combo_streak:
+                                self.max_combo_streak = self.combo_count
+                            self.score += 10 + 5 * (self.combo_count - 1)
                             break
 
                 # Check if all targets are hit
@@ -188,6 +213,7 @@ class CannonFrenzy:
                         cannonballs_left = self.current_level.cannonballs_left
                         self.cannon = sprites.Cannon(self.screen, self.cannonballs, cannonballs_left)
 
+<<<<<<< HEAD
                     else:
                         self.game_over = True
 
@@ -206,15 +232,23 @@ class CannonFrenzy:
                     f"Cannonballs Left: {self.cannon.cannonballs_left}",
                     True,
                     "Black"
+=======
+                # Display the scoreboard
+                self.scoreboard.draw(
+                    level_number=self.current_level.level_number,
+                    score=self.score,
+                    combo_count=self.combo_count,
+                    max_combo_streak=self.max_combo_streak,
+                    cannonballs_left=self.cannon.cannonballs_left
+>>>>>>> 69d4fcdf6656fb5a93a67570b0f27eb8ca0d17eb
                 )
-                cannonballs_left_text_rect = cannonballs_left_text.get_rect(topleft=(10, 90))
-                self.screen.blit(cannonballs_left_text, cannonballs_left_text_rect)
 
                 # Update the cannon sprite
                 self.cannon.update()
 
             pygame.display.update()
             self.clock.tick(self.fps)
+
 
     def handle_game_over(self):
         """Displays the game over screen."""
@@ -225,20 +259,7 @@ class CannonFrenzy:
         # Game over sound
         if not self.game_over_sound_played:
             self.game_over_sound_played = True
-            self.game_over_sound.play()
+            self.sound_manager.game_over_sound.play()
 
-        # Game over screen
-        sunset_image = pygame.image.load("assets/images/sunset_pixel.jpg")
-        self.screen.blit(sunset_image, (0, 0))
-        self.font = pygame.font.Font(None, 50)
-        game_over_text = self.font.render("GAME OVER!", True, "Black")
-        game_over_rect = game_over_text.get_rect(center=(400, 200))
-        self.screen.blit(game_over_text, game_over_rect)
-
-        score_text = self.font.render(f"Score: {self.score}", True, "Black")
-        score_text_rect = score_text.get_rect(center=(400, 300))
-        self.screen.blit(score_text, score_text_rect)
-
-        restart_text = self.font.render("Press R to restart game", True, "Black")
-        restart_text_rect = restart_text.get_rect(center=(400, 360))
-        self.screen.blit(restart_text, restart_text_rect)
+        # Draw the game over screen
+        self.menu.game_over_menu(self.score)
